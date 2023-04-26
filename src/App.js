@@ -9,9 +9,8 @@ import Welcome from './components/Welcome';
 function App() {
   const [user] = useAuthState(auth);
   return (
-    <div className='bg-gradient-to-br from-yellow-300 to-orange-500 h-screen'>
-      <NavBar />
-      {user?(<ChatBox className='text-center'/>):(<Welcome/>)}
+    <div className='bg-gradient-to-br from-blue-800 to-black h-screen'>
+      {user?(<ChatBox/>):(<Welcome/>)}
       
     </div>
   );

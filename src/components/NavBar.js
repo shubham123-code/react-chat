@@ -16,7 +16,7 @@ const NavBar = () => {
     }
     return (
         <div className='py-5 flex justify-between'>
-            <div className='text-center text-[25px] my-2 mx-10'>
+            <div className='text-center text-[25px] my-2 mx-10 text-white'>
                 Chat App
             </div>
             <div className='text-center'></div>

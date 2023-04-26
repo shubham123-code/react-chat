@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { auth,db } from "../firebase";
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import SendBtn from "../img/icons8-send-24.png";
 
 const SendMessage = () => {
   const [message,setMessage]=useState("")
@@ -21,15 +22,18 @@ const SendMessage = () => {
     setMessage("")
   }
   return (
-    <div className='w-1/2'>
+    <div className="py-5">
       <form className='flex' onSubmit={(event) => sendMessage(event)}>
-        <label htmlFor="messageInput" hidden>
-          Enter Message
-        </label>
-        <input value={message} onChange={(e)=>(setMessage(e.target.value))} className='w-full h-10 text-[20px] px-2' placeholder='Type message ..' />
-        <button type='submit' className='px-2 bg-gradient-to-tr from-blue-500 to-black text-white'>Send!</button>
-      </form>
+          <input
+            value={message} onChange={(e)=>(setMessage(e.target.value))}
+            className="bg-gray-800 py-5 px-3 rounded-xl w-full"
+            type="text"
+            placeholder="type your message here..."
+          />
+          <button type='submit' className='p-4 mx-4 my-2 rounded-full bg-white hover:bg-blue-300 transition-transform'> <img src={SendBtn}/></button>
+        </form>
     </div>
+   
   )
 }
 

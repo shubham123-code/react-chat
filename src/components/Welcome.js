@@ -5,6 +5,7 @@ import { auth } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
 
+
 const Welcome = () => {
     const [user]=useAuthState(auth);
     const googleSignin = () =>{
@@ -15,11 +16,11 @@ const Welcome = () => {
         auth.signOut()
     }
     return (
-        <div className='my-10'>
-            <div className='text-center text-[50px] my-2'>
+        <div>
+            <div className='text-center text-[50px] p-10 text-white'>
                 Chat App
             </div>
-            <div className='text-center'>react based chat app for CS358</div>
+            <div className='text-center text-white'>react based chat app for CS358</div>
             <div className='text-center my-12'>
             {user?(
             <button className='text-center px-5 py-3 bg-gradient-to-tr from-blue-500 to-black text-white' onClick={googleSignout} alt="sign out" type="button">
