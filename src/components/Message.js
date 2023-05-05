@@ -3,7 +3,6 @@ import {useAuthState} from 'react-firebase-hooks/auth'
 import { auth } from '../firebase'
 
 const Message = ({message}) => {
-  const img = message.avatar
   const [user]=useAuthState(auth)
   return (
     // <div className={`p-5 m-5 bg-gray-300 rounded-lg shadow-sm`}>
@@ -27,14 +26,14 @@ const Message = ({message}) => {
               {message.text}
             </div>
             <img
-              src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+              src={user.photoURL}
               class="object-cover h-8 w-8 rounded-full"
               alt=""
             />
           </div>):(
           <div class="flex justify-start mb-4">
           <img
-            src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+            src={user.photoURL}
             class="object-cover h-8 w-8 rounded-full"
             alt=""
           />

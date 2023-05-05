@@ -3,7 +3,7 @@ import { auth,db } from "../firebase";
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import SendBtn from "../img/icons8-send-24.png";
 
-const SendMessage = () => {
+const SendMessage = ({groupId}) => {
   const [message,setMessage]=useState("")
   const sendMessage = async(event) => {
     event.preventDefault();
@@ -17,6 +17,7 @@ const SendMessage = () => {
       name: displayName,
       avatar: photoURL,
       createdAt: serverTimestamp(),
+      groupId: groupId,
       uid,
     });
     setMessage("")
