@@ -3,6 +3,7 @@ import { db,auth } from '../firebase';
 import React, { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { QuerySnapshot } from 'firebase/firestore';
 
 
 const CreateGroup = () => {
@@ -82,6 +83,22 @@ const CreateGroup = () => {
         return 
     };
     useEffect(()=>{
+        const q1 = query(collection(db,"Users/"));
+        
+        let users = [];
+        
+        const unsubscribe = onSnapshot(q1,(QuerySnapshot) => {
+            //console.log(doc.data());
+            QuerySnapshot.forEach((doc)=>{
+                users.push({... doc.data(), id: doc.id});
+                console.log(doc.data());
+            })
+            setGroupMembers(users);
+            console.log(users);
+        })
+        return ()=>unsubscribe;
+    },[])
+    useEffect(()=>{
         getUser();
     },[]);
   return (
@@ -144,6 +161,13 @@ const CreateGroup = () => {
                     >
                     Select users to add
                     </label>
+                    <div className='flex flex-col w-[600px] h-[100px] border-r-2 border-black b-2 overflow-x-hidden overflow-y-auto text-[20px]'>
+                        {groupMembers.map((user)=>(
+                            <div id={user.id}>
+                                {user.name}
+                            </div>
+                        ))}
+                    </div>
                 </div>
                 </div>
             </div>

@@ -90,7 +90,7 @@ const ChatBox = () => {
     useEffect(()=>{
         bottomRef.current?.scrollIntoView({behavior:'smooth'})
     },[messages])
-    const googleSignout = () =>{
+    const signOut = () =>{
       auth.signOut()
     }
     return (
@@ -125,9 +125,9 @@ const ChatBox = () => {
       </ReactModal>
       <button
         className="p-2 rounded-full flex items-center justify-center"
-        onClick={googleSignout}
+        onClick={signOut}
       >
-        <img className="rounded-full" src={user.photoURL}/>
+        sign out
       </button>
     </div>
     <div className="flex flex-row justify-between bg-gray-600">
