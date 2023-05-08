@@ -5,6 +5,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { QuerySnapshot } from 'firebase/firestore';
 import { updateProfile, createUserWithEmailAndPassword } from 'firebase/auth';
+import {ToastContainer,  toast} from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateProfile = ({setProfileCreated, setCreateProfileMode}) => {
     const [user,setUser]=useState();
@@ -56,22 +58,22 @@ const CreateProfile = ({setProfileCreated, setCreateProfileMode}) => {
         //console.log(URL.createObjectURL(e.target.files[0]));
     }
   return (
-    <div>
+    <div className=" bg-gray-50 dark:bg-gray-900">
     
+    <div >
     <div>
-    <div>
-        <div className='text-[40px] flex justify-center'>
+        <div className=' w-1/4 mx-auto text-[40px] flex items-center justify-center text-white'>
         Create Profile
     </div>
-    <div class="flex justify-center p-12 text-[40px]">
+    <div class="h-screen flex justify-center p-12 text-[40px]">
     
-    <div class="mx-auto w-full max-w-[550px]">
+    <div class="mx-auto w-full max-w-[550px] border-2 rounded-lg border-blue-400 h-1/2 py-4 px-4">
         <div class="-mx-3 flex flex-wrap">
-            <div class="w-full px-3 sm:w-1/2">
+            <div class="w-full px-2 sm:w-1/2">
             <div class="mb-5">
                 <label
                 for="name"
-                class="mb-3 block text-base font-medium text-[#07074D]"
+                class="mb-3 text-base font-medium flex justify-center text-[#a1a1c9]"
                 >
                 Enter Your Name
                 </label>
@@ -89,7 +91,7 @@ const CreateProfile = ({setProfileCreated, setCreateProfileMode}) => {
             <div class="mb-5">
                 <label
                 for="lName"
-                class="mb-3 block text-base font-medium text-[#07074D]"
+                class="mb-3 flex justify-center text-base font-medium text-[#a1a1c9]"
                 >
                 Upload Profile Photo
                 </label>
@@ -111,7 +113,7 @@ const CreateProfile = ({setProfileCreated, setCreateProfileMode}) => {
             <div class="mb-5">
                 <label
                 for="email"
-                class="mb-3 block text-base font-medium text-[#07074D]"
+                class="mb-3 flex justify-center text-base font-medium text-[#a1a1c9]"
                 >
                 Enter Your Email
                 </label>
@@ -129,7 +131,7 @@ const CreateProfile = ({setProfileCreated, setCreateProfileMode}) => {
             <div class="mb-5">
                 <label
                 for="password"
-                class="mb-3 block text-base font-medium text-[#07074D]"
+                class="mb-3 flex justify-center text-base font-medium text-[#a1a1c9]"
                 >
                 Enter Your Password
                 </label>
@@ -154,7 +156,7 @@ const CreateProfile = ({setProfileCreated, setCreateProfileMode}) => {
             </button>
         </div>
         <p class="text-sm font-light text-gray-500 dark:text-gray-400 my-10 flex justify-center">
-                      Already have an account yet? <button onClick={()=>(setCreateProfileMode(false))} class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign in</button>
+                      Already have an account? &nbsp; <button onClick={()=>(setCreateProfileMode(false))} class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign in</button>
                   </p>
     </div>
     </div>
