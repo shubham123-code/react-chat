@@ -54,6 +54,7 @@ const CreateGroup = () => {
         });
         const q1=query(collection(db,"Users/"+uid1+"/Groups"));
         await addDoc(q1,{
+            id: newGroupId,
             groupName: groupName,
             createdAt: serverTimestamp(),
             groupIconUrl: groupIconUrl,
@@ -172,11 +173,14 @@ const CreateGroup = () => {
                     <div className='flex flex-col w-[600px] h-[100px] border-r-2 border-black b-2 overflow-x-hidden overflow-y-auto text-[20px]'>
                         {groupMembers.map((user)=>{
                             if(groupMembers.includes(user)){
+                                if(user.name!==""){
                                 return(
+                                
                                 <button id={user.id} type="button" className="border-black border-b-2 p-2" >
                                     {user.name}
                                 </button>
                                 )
+                                }
                             }
                         })}
                     </div>
