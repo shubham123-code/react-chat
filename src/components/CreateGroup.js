@@ -29,9 +29,9 @@ const CreateGroup = () => {
     }
     const createGroup = async(event) =>{
         event.preventDefault();
-        getUser();
+        await getUser();
         if(uid1==="")return;
-        const q=query(collection(db,"Users/"+uid1+"/Groups"));
+        const q=query(collection(db,"Groups"));
         
         await addDoc(q,{
             groupName: groupName,
@@ -44,14 +44,22 @@ const CreateGroup = () => {
         const metadata = {
             contentType: 'image/jpeg',
           };
-        const uploadTask = await uploadBytes(groupsRef, groupIcon, metadata);
+        await uploadBytes(groupsRef, groupIcon, metadata).then(()=>(
         getDownloadURL(ref(storage, 'images/groups-'+newGroupId+'.jpg')).then((url)=>{
             setStorageGroupIconUrl(url);
-        });
-        const docRef=doc(db,"Users/"+uid1+"/Groups",newGroupId);
+        })));
+        const docRef=doc(db,"/Groups",newGroupId);
         await updateDoc(docRef,{
             groupIconUrl: storageGroupIconUrl
         });
+        const q1=query(collection(db,"Users/"+uid1+"/Groups"));
+        await addDoc(q1,{
+            groupName: groupName,
+            createdAt: serverTimestamp(),
+            groupIconUrl: groupIconUrl,
+        }).then((docRef)=>{
+            setNewGroupId(docRef.id);
+        })
         if(newGroupId!=""){
             setGroupCreated(true);
         }
@@ -153,7 +161,7 @@ const CreateGroup = () => {
                 </div>
             </div>
 
-            <div class="-mx-3 flex flex-wrap">
+            <div class="-mx-3 flex flex-wrap border-black border-b-2">
                 <div class="w-full px-3 sm:w-1/2">
                 <div class="mb-5">
                     <label
@@ -162,11 +170,15 @@ const CreateGroup = () => {
                     Select users to add
                     </label>
                     <div className='flex flex-col w-[600px] h-[100px] border-r-2 border-black b-2 overflow-x-hidden overflow-y-auto text-[20px]'>
-                        {groupMembers.map((user)=>(
-                            <div id={user.id}>
-                                {user.name}
-                            </div>
-                        ))}
+                        {groupMembers.map((user)=>{
+                            if(groupMembers.includes(user)){
+                                return(
+                                <button id={user.id} type="button" className="border-black border-b-2 p-2" >
+                                    {user.name}
+                                </button>
+                                )
+                            }
+                        })}
                     </div>
                 </div>
                 </div>

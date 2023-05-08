@@ -6,42 +6,28 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithRedirect } from "firebase/auth";
 import { getAuth, createUserWithEmailAndPassword} from "firebase/auth";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import CreateGroup from './CreateGroup';
+import CreateProfile from './CreateProfile';
 
 
-const Welcome = () => {
-    const [user]=useAuthState(auth);
+const Welcome = ({setProfileCreated, setUserSignedIn}) => {
+    const [user,setUser]=useAuthState(auth);
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
     const [createProfileMode,setCreateProfileMode]=useState(false);
-    const createUser=async(event)=>{
+    const userSignIn = async (event) =>{
         event.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed in 
-    user = userCredential.user;
-    console.log(user)
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    alert(errorMessage);
-  });
-  
-}
-const userSignIn = async (event) =>{
-    event.preventDefault();
-    signInWithEmailAndPassword(auth,email,password).then(
-        (userCredential)=>{
-            user=userCredential.user;
-            console.log(user);
-        }
-    )
-    .catch((error)=>{
-        const errorMessage = error.message;
-        alert(errorMessage);
-    })
-  }
+        signInWithEmailAndPassword(auth,email,password).then(
+            (userCredential)=>{
+                setUserSignedIn(true);
+                console.log(user);
+            }
+        ).catch((error)=>{
+            const errorMessage = error.message;
+            alert(errorMessage);
+        })
+       
+    }
     return (
     <div>
         {createProfileMode==false?(
@@ -85,9 +71,8 @@ const userSignIn = async (event) =>{
       </div>
   </div>
 </section>):(
-    <div>
-        create profile
-    </div>
+    <CreateProfile setProfileCreated={setProfileCreated} setCreateProfileMode={setCreateProfileMode}
+    />
 )}
 </div>
 

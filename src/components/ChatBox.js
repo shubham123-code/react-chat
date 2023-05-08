@@ -11,7 +11,7 @@ import ReactModal from 'react-modal'
 import CreateGroup from './CreateGroup'
 
 
-const ChatBox = () => {
+const ChatBox = ({setProfileCreated, setUserSignedIn}) => {
     const [messages,setMessages]=useState([]);
     const [groupId,setGroupId]=useState("");
     const [groupName,setGroupName]=useState();
@@ -51,7 +51,7 @@ const ChatBox = () => {
         
       }
       //if(group!==""){
-        const q = query(collection(db,"messages"),orderBy("createdAt"),limit(50));
+        const q = query(collection(db,"messages"),orderBy("createdAt"));
         const unsubscirbe = onSnapshot(q, (QuerySnapshot) => {
             let messages = [];
             QuerySnapshot.forEach((doc) => {
@@ -92,6 +92,8 @@ const ChatBox = () => {
     },[messages])
     const signOut = () =>{
       auth.signOut()
+      setProfileCreated(false);
+      setUserSignedIn(false);
     }
     return (
        
@@ -176,7 +178,7 @@ const ChatBox = () => {
         <div className='overflow-x-hidden overflow-y-auto h-[482px]'>
         {messages?.map((message)=>{
           
-          if(message.groupId===groupId){
+          if(message.groupId===groupId&&groupId!==""){
           return (
                 <div key={message.id}>
                 <Message message={message} key={message.id} />
