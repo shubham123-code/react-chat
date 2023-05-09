@@ -47,12 +47,8 @@ const ChatBox = ({setProfileCreated, setUserSignedIn}) => {
     }
 
     useEffect(() => {
-      const doit = () => {
-        
-      }
-      //if(group!==""){
         const q = query(collection(db,"messages"),orderBy("createdAt"));
-        const unsubscirbe = onSnapshot(q, (QuerySnapshot) => {
+        const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
             let messages = [];
             QuerySnapshot.forEach((doc) => {
                 messages.push({... doc.data(), id: doc.id});
@@ -60,20 +56,15 @@ const ChatBox = ({setProfileCreated, setUserSignedIn}) => {
             setMessages(messages);
         });
        
-        return () => unsubscirbe;
-      // }
-      // else{
-      //   return ()=>doit;
-      // }
-      
+        return () => unsubscribe;
     },[])
     useEffect(() => {
       console.log("its running?")
       console.log(uid1);
       if(uid1!==""){
-        console.log("its runnning!");
+        console.log("its running!");
         const q = query(collection(db,"Users/"+uid1+"/Groups"),orderBy("createdAt"));
-        const unsubscirbe = onSnapshot(q, (QuerySnapshot) => {
+        const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
             let userGroups = [];
             QuerySnapshot.forEach((doc) => {
                 userGroups.push({... doc.data(), id: doc.id});
@@ -81,9 +72,10 @@ const ChatBox = ({setProfileCreated, setUserSignedIn}) => {
             setUserGroups(userGroups);
             console.log(userGroups);
         });
-        return ()=>unsubscirbe;
+        return ()=>unsubscribe;
       }
     },[uid1])
+
     useEffect(()=>{
       createNewUser();
   } ,[]);
@@ -107,26 +99,26 @@ const ChatBox = ({setProfileCreated, setUserSignedIn}) => {
           type="text"
           name=""
           id=""
-          placeholder="search IRL"
+          placeholder="Search Chat"
           className="rounded-2xl bg-gray-500 py-3 px-5 w-full"
         />
       </div>
       <button 
-        className="rounded-2xl bg-gray-500 py-3 px-5 w-[100px]"
+        className="border-2 border-blue-500 rounded-full py-3 px-5 w-[115px]"
         onClick={setIsOpen}
       >
-        Create Group
+        Create Chatroom
       </button>
       <ReactModal
-        isOpen={isOpen}
-        contentLabel="Example Modal"
+        isOpen={isOpen}
+        contentLabel="Example Modal"
         onRequestClose={() => setIsOpen(false)}
-      >
-        <CreateGroup 
+      >
+      <CreateGroup 
         />
-      </ReactModal>
+      </ReactModal>
       <button
-        className="p-2 rounded-full flex items-center justify-center"
+        className="border-2 border-blue-500 p-2 rounded-full flex items-center justify-center"
         onClick={signOut}
       >
         Sign Out
@@ -134,13 +126,13 @@ const ChatBox = ({setProfileCreated, setUserSignedIn}) => {
     </div>
     <div className="flex flex-row justify-between bg-gray-600">
       
-      <div className="flex flex-col w-[600px] border-r-2 border-black overflow-y-auto">
+      <div className="h-[85vh] flex flex-col w-[600px] border-r-2 border-black overflow-y-auto">
         
         <div className="border-b-2 border-black py-4 px-2">
           <input
             type="text"
             placeholder="search chats or contacts"
-            className="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full"
+            className="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full text-black"
           />
         </div>
       <div className='overflow-x-hidden overflow-y-auto h-[482px] border-b-2 border-gray-400'>
@@ -194,16 +186,15 @@ const ChatBox = ({setProfileCreated, setUserSignedIn}) => {
       
       <div className="w-[600px] border-l-2 px-5 border-black">
         <div className="flex flex-col">
-          <div className="font-semibold text-xl py-4">{groupName}</div>
+          <div className="font-semibold text-xl py-4 flex justify-center">{groupName}</div>
           <img
             src={groupIcon}
             className="object-cover rounded-xl h-64"
             alt=""
           />
           <div className="font-semibold py-4"></div>
-          <div className="font-light">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt,
-            perspiciatis!
+          <div className="font-bold font-mono flex justify-center">
+            CHAT ROOM DP
           </div>
           </div>
         </div>
