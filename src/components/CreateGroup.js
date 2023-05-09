@@ -54,6 +54,12 @@ const CreateGroup = () => {
             groupIconUrl: storageGroupIconUrl
         });
         const q1=query(collection(db,"Users/"+uid1+"/Groups"));
+        await addDoc(q1,{
+            gid: newGroupId,
+            groupName: groupName,
+            createdAt: serverTimestamp(),
+            groupIconUrl: storageGroupIconUrl,
+        })
         addedUsers.map(async(user)=>{
             console.log(user);
             const q2=query(collection(db,"Users/"+user.id+"/Groups"));

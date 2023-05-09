@@ -47,9 +47,10 @@ const Message = ({message}) => {
           <div
             class="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white"
           >
-            <div className='p-2 text-yellow'>{user.displayName}hello</div>
+            
             <div>{message.text}</div>
           </div>
+          <div className='p-2 text-yellow'>{user.displayName}</div>
         </div>)}
     </div>
           
