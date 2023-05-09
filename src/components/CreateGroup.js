@@ -12,6 +12,7 @@ const CreateGroup = () => {
     const [groups,setGroups]=useState([]);
     const [groupName,setGroupName]=useState("");
     const [groupMembers,setGroupMembers]=useState([]);
+    const [addedUsers,setAddedUsers]=useState([]);
     const [groupIconUrl,setGroupIconUrl]=useState("");
     const [storageGroupIconUrl,setStorageGroupIconUrl]=useState("");
     const [groupIcon,setGroupIcon]=useState();
@@ -53,17 +54,21 @@ const CreateGroup = () => {
             groupIconUrl: storageGroupIconUrl
         });
         const q1=query(collection(db,"Users/"+uid1+"/Groups"));
-        await addDoc(q1,{
-            id: newGroupId,
-            groupName: groupName,
-            createdAt: serverTimestamp(),
-            groupIconUrl: groupIconUrl,
-        }).then((docRef)=>{
-            setNewGroupId(docRef.id);
+        addedUsers.map(async(user)=>{
+            console.log(user);
+            const q2=query(collection(db,"Users/"+user.id+"/Groups"));
+            await addDoc(q2,{
+                gid: newGroupId,
+                groupName: groupName,
+                createdAt: serverTimestamp(),
+                groupIconUrl: storageGroupIconUrl,
+            })
         })
         if(newGroupId!=""){
             setGroupCreated(true);
         }
+    
+
     }
     const handleFileUpload = (e) => {
         //console.log(e.target.files);
@@ -71,26 +76,6 @@ const CreateGroup = () => {
         setGroupIcon(e.target.files[0]);
         //console.log(URL.createObjectURL(e.target.files[0]));
     }
-    const displayGroups=async()=>{
-        getUser();
-        console.log(uid1);
-        // if(uid1===""){
-        //     return;
-        // }
-
-        const q1 = query(collection(db,"Users/" + uid1 + "/Groups"));
-        
-        let groups1 = [];
-        const querySnapShot = await getDocs(q1);
-        querySnapShot.forEach((doc) => {
-            //console.log(doc.data());
-            groups1.push({... doc.data(), id: doc.id});
-            console.log(doc.data());
-        })
-        console.log(groups1);
-        setGroups(groups1);
-        return 
-    };
     useEffect(()=>{
         const q1 = query(collection(db,"Users/"));
         
@@ -110,6 +95,15 @@ const CreateGroup = () => {
     useEffect(()=>{
         getUser();
     },[]);
+    const addUser = ({user}) => {
+        if(addedUsers.includes(user))return;
+        console.log(addedUsers);
+        let newList = addedUsers.map((item) => {
+            return item;
+          });
+        newList.push(user);
+        setAddedUsers(newList);
+    }
   return (
     <div>
         {groupCreated?(<div className='flex justify-center my-40'>Group Created Succesfully!</div>):(
@@ -170,20 +164,51 @@ const CreateGroup = () => {
                     >
                     Select users to add
                     </label>
-                    <div className='flex flex-col w-[600px] h-[100px] border-r-2 border-black b-2 overflow-x-hidden overflow-y-auto text-[20px]'>
+                    <div className='flex flex-col w-[600px] h-[200px] border-r-2 border-black b-2 overflow-x-hidden overflow-y-auto text-[20px]'>
                         {groupMembers.map((user)=>{
-                            if(groupMembers.includes(user)){
-                                if(user.name!==""){
+                            if(!addedUsers.includes(user)){
+                                console.log(user);
+                                if(user.name){
+                                    
                                 return(
                                 
-                                <button id={user.id} type="button" className="border-black border-b-2 p-2" >
+                                <button id={user.id} type="button" className={`${addedUsers.includes(user.uid)?"text-red":"text-blue"}border-black border-b-2 p-2`} onClick={()=>(addUser({user}))} >
                                     {user.name}
                                 </button>
                                 )
                                 }
+                                else{
+                                    return (<div />);
+                                }
                             }
                         })}
                     </div>
+
+                </div>
+                <div class="mb-5">
+                    <label
+                    class="mb-3 block text-base font-medium text-[#07074D]"
+                    >
+                    Added users
+                    </label>
+                    <div className='flex flex-col w-[600px] h-[200px] border-r-2 border-black b-2 overflow-x-hidden overflow-y-auto text-[20px]'>
+                        {addedUsers.map((user)=>{
+                                console.log(user);
+                                if(user.name){
+                                    
+                                return(
+                                
+                                <div id={user.id} type="button" className="border-black border-b-2 p-2" >
+                                    {user.name}
+                                </div>
+                                )
+                                }
+                                else{
+                                    return (<div />);
+                                }
+                        })}
+                    </div>
+                    
                 </div>
                 </div>
             </div>
