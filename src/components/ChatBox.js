@@ -129,7 +129,7 @@ const ChatBox = ({setProfileCreated, setUserSignedIn}) => {
         className="p-2 rounded-full flex items-center justify-center"
         onClick={signOut}
       >
-        sign out
+        Sign Out
       </button>
     </div>
     <div className="flex flex-row justify-between bg-gray-600">
