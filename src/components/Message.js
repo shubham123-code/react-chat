@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { query, collection, orderBy, onSnapshot, limit, where, getDocs } from 'firebase/firestore'
 import {useAuthState} from 'react-firebase-hooks/auth'
-import { auth } from '../firebase'
+import { auth, db } from '../firebase'
+import { doc } from '@firebase/firestore'
 
 const Message = ({message}) => {
   const [user]=useAuthState(auth)
@@ -50,7 +52,7 @@ const Message = ({message}) => {
             
             <div>{message.text}</div>
           </div>
-          <div className='p-2 text-yellow'>{user.displayName}</div>
+          <div className='p-2 text-yellow'>{message.name}</div>
         </div>)}
     </div>
           
