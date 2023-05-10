@@ -42,7 +42,7 @@ const Message = ({message}) => {
           </div>):(
           <div class="flex justify-start mb-4">
           <img
-            src={user.photoURL}
+            src={message.avatar}
             class="object-cover h-8 w-8 rounded-full"
             alt=""
           />
