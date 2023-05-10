@@ -2,13 +2,24 @@ import React, { useState } from 'react'
 import { auth,db } from "../firebase";
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import SendBtn from "../img/icons8-send-24.png";
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const SendMessage = ({groupId}) => {
+
+  const toastOptions = {
+    position:'bottom-right',
+    autoClass:8000,
+    pauseOnHover:true,
+    draggable: true,
+    theme:"dark", 
+  };
+
   const [message,setMessage]=useState("")
   const sendMessage = async(event) => {
     event.preventDefault();
     if(message.trim()===""){
-      alert("Enter valid message");
+      toast.error('Enter a valid message', toastOptions);
       return;
     }
     const {uid, displayName, photoURL}=auth.currentUser
@@ -33,7 +44,9 @@ const SendMessage = ({groupId}) => {
           />
           <button type='submit' className='p-4 mx-4 my-2 rounded-full bg-white hover:bg-blue-300 transition-transform'> <img src={SendBtn}/></button>
         </form>
+        <ToastContainer />
     </div>
+    
    
   )
 }
