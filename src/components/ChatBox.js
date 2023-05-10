@@ -141,7 +141,7 @@ const ChatBox = ({setProfileCreated, setUserSignedIn}) => {
 
             return (
               <button
-              class={`flex flex-row py-4 px-2 justify-center ${group.gid===groupId?"bg-black":''} items-center border-b-2 w-full`}
+              class={`flex flex-row py-4 px-2 justify-center ${group.gid===groupId?"bg-gray-800":''} items-center border-b-2 w-full`}
               onClick={()=>{
                 setGroupName(group.groupName);
                 setCreatedAt(group.createdAt);

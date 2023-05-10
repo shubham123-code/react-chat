@@ -59,7 +59,7 @@ const CreateProfile = ({setProfileCreated, setCreateProfileMode}) => {
     
     <div>
     <div>
-        <div className=' w-1/4 mx-auto text-[40px] flex items-center justify-center text-white'>
+        <div className=' w-1/4 mx-auto text-[40px] flex items-center justify-center '>
         Create Profile
     </div>
     <div class="h-screen w-full m-0 p-6 flex justify-center text-[40px]">
