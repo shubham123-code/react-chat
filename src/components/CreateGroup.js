@@ -113,7 +113,7 @@ const CreateGroup = () => {
         setAddedUsers(newList);
     }
   return (
-    <div>
+    <div >
         {groupCreated?(<div className='flex justify-center my-40'>Group Created Succesfully!</div>):(
         <div>
             <div className='text-[40px] flex justify-center'>
@@ -180,7 +180,14 @@ const CreateGroup = () => {
                                 return(
                                 
                                 <button id={user.id} type="button" className={`${addedUsers.includes(user.uid)?"text-red":"text-blue"}border-black border-b-2 p-2`} onClick={()=>(addUser({user}))} >
+                                    <div className='flex justify-center'>
+                                    <img
+                                        src={user.photoURL}
+                                        class="object-cover h-8 w-8 rounded-full cursor-pointer"
+                                        alt=""
+                                    />
                                     {user.name}
+                                    </div>
                                 </button>
                                 )
                                 }
@@ -206,7 +213,14 @@ const CreateGroup = () => {
                                 return(
                                 
                                 <div id={user.id} type="button" className="border-black border-b-2 p-2" >
+                                    <div className='flex justify-center'>
+                                    <img
+                                        src={user.photoURL}
+                                        class="object-cover h-8 w-8 rounded-full cursor-pointer"
+                                        alt=""
+                                    />
                                     {user.name}
+                                    </div>
                                 </div>
                                 )
                                 }

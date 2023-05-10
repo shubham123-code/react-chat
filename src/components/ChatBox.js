@@ -114,7 +114,7 @@ const ChatBox = ({setProfileCreated, setUserSignedIn}) => {
         contentLabel="Example Modal"
         onRequestClose={() => setIsOpen(false)}
       >
-      <CreateGroup 
+      <CreateGroup className="bg-[#071e34]"
         />
       </ReactModal>
       <button
