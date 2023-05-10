@@ -13,7 +13,6 @@ function App() {
   return (
     <div >
       {(profileCreated || userSignedIn)?(<ChatBox setProfileCreated={setProfileCreated} setUserSignedIn={setUserSignedIn}/>):(<Welcome setProfileCreated={setProfileCreated} setUserSignedIn={setUserSignedIn}/>)}
-      {/* <Example /> */}
     </div>
   );
 }

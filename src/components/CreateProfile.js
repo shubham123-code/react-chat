@@ -6,6 +6,7 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { QuerySnapshot } from 'firebase/firestore';
 import { updateProfile, createUserWithEmailAndPassword } from 'firebase/auth';
 import {ToastContainer,  toast} from 'react-toastify';
+import {uuidv4} from '@firebase/util';
 import "react-toastify/dist/ReactToastify.css";
 
 const CreateProfile = ({setProfileCreated, setCreateProfileMode}) => {
@@ -18,39 +19,35 @@ const CreateProfile = ({setProfileCreated, setCreateProfileMode}) => {
     const [password,setPassword]=useState("");
     const storage=getStorage();
     const createProfile = async(event)=>{
-      await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in 
-        setUser(userCredential.user);
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-        });
-      await updateProfile(auth.currentUser, {
-          displayName: displayName,
-        }).then(()=>{
-          
-          setUser(auth.currentUser);
-          
-        })
+      
+      let temp=uuidv4();
       console.log(user);
-      const imageRef = ref(storage, 'user-images/user-'+user.uid+'.jpg');
+      const imageRef = ref(storage, 'user-images/user-'+temp+'.jpg');
       const metadata = {
           contentType: 'image/jpeg',
         };
-      await uploadBytes(imageRef, photo, metadata);
-      getDownloadURL(ref(storage, 'user-images/user-'+user.uid+'.jpg')).then((url)=>{
+      await uploadBytes(imageRef, photo, metadata).then(async()=>{
+      await getDownloadURL(imageRef).then((url)=>{
           setStorageUrl(url);
-      });
-      await updateProfile(auth.currentUser,{
-        photoURL: storageUrl,
-      }).then(()=>{
-        alert("profile created successfully");
-        return (setProfileCreated(true))})
-    }
+      })}).then(async()=>{
+        if(storageUrl===""){
+          return;
+        }
+        await createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in 
+          setUser(userCredential.user);
+          // ...
+        })
+          console.log(storageUrl);
+          await updateProfile(auth.currentUser,{
+            displayName: displayName,
+            photoURL: storageUrl,
+          }).then(()=>{
+            alert("profile created successfully");
+            return (setProfileCreated(true))})
+        }
+      )}
     const handleFileUpload = (e) => {
         //console.log(e.target.files);
         setPhotoUrl(URL.createObjectURL(e.target.files[0]));

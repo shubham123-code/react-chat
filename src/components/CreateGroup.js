@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { QuerySnapshot } from 'firebase/firestore';
+import { uuidv4 } from '@firebase/util';
 
 
 const CreateGroup = () => {
@@ -32,47 +33,49 @@ const CreateGroup = () => {
         event.preventDefault();
         await getUser();
         if(uid1==="")return;
-        const q=query(collection(db,"Groups"));
-        
-        await addDoc(q,{
-            groupName: groupName,
-            createdAt: serverTimestamp(),
-            groupIconUrl: "",
-        }).then((docRef)=>{
-            setNewGroupId(docRef.id);
-        })
-        const groupsRef = ref(storage, 'images/groups-'+newGroupId+'.jpg');
+        let tempId=uuidv4();
+        const groupsRef = ref(storage, 'images/groups-'+tempId+'.jpg');
         const metadata = {
             contentType: 'image/jpeg',
           };
-        await uploadBytes(groupsRef, groupIcon, metadata).then(()=>(
-        getDownloadURL(ref(storage, 'images/groups-'+newGroupId+'.jpg')).then((url)=>{
+        await uploadBytes(groupsRef, groupIcon, metadata).then(async()=>(
+        await getDownloadURL(groupsRef).then((url)=>{
             setStorageGroupIconUrl(url);
-        })));
-        const docRef=doc(db,"/Groups",newGroupId);
-        await updateDoc(docRef,{
-            groupIconUrl: storageGroupIconUrl
-        });
-        const q1=query(collection(db,"Users/"+uid1+"/Groups"));
-        await addDoc(q1,{
-            gid: newGroupId,
-            groupName: groupName,
-            createdAt: serverTimestamp(),
-            groupIconUrl: storageGroupIconUrl,
-        })
-        addedUsers.map(async(user)=>{
-            console.log(user);
-            const q2=query(collection(db,"Users/"+user.id+"/Groups"));
-            await addDoc(q2,{
+        }))).then(async()=>{
+            const q=query(collection(db,"Groups"));
+            
+            await addDoc(q,{
+                groupName: groupName,
+                createdAt: serverTimestamp(),
+                groupIconUrl: storageGroupIconUrl,
+            }).then(async(docRef)=>{
+                setNewGroupId(docRef.id);
+            
+            const q1=query(collection(db,"Users/"+uid1+"/Groups"));
+            await addDoc(q1,{
                 gid: newGroupId,
                 groupName: groupName,
                 createdAt: serverTimestamp(),
                 groupIconUrl: storageGroupIconUrl,
             })
+            addedUsers.map(async(user)=>{
+                console.log(user);
+                const q2=query(collection(db,"Users/"+user.id+"/Groups"));
+                await addDoc(q2,{
+                    gid: newGroupId,
+                    groupName: groupName,
+                    createdAt: serverTimestamp(),
+                    groupIconUrl: storageGroupIconUrl,
+                }).catch((error)=>{
+                    alert(error.message);
+                })
+            })
+            console.log(newGroupId);
+            if(storageGroupIconUrl!==""){
+                setGroupCreated(true);
+            }
         })
-        if(newGroupId!=""){
-            setGroupCreated(true);
-        }
+    });
     
 
     }
@@ -86,15 +89,14 @@ const CreateGroup = () => {
         const q1 = query(collection(db,"Users/"));
         
         let users = [];
-        
         const unsubscribe = onSnapshot(q1,(QuerySnapshot) => {
             //console.log(doc.data());
             QuerySnapshot.forEach((doc)=>{
                 users.push({... doc.data(), id: doc.id});
-                console.log(doc.data());
+                //console.log(doc.data());
             })
             setGroupMembers(users);
-            console.log(users);
+            //console.log(users);
         })
         return ()=>unsubscribe;
     },[])
@@ -103,7 +105,7 @@ const CreateGroup = () => {
     },[]);
     const addUser = ({user}) => {
         if(addedUsers.includes(user))return;
-        console.log(addedUsers);
+        //console.log(addedUsers);
         let newList = addedUsers.map((item) => {
             return item;
           });
@@ -172,8 +174,7 @@ const CreateGroup = () => {
                     </label>
                     <div className='flex flex-col w-[600px] h-[200px] border-r-2 border-black b-2 overflow-x-hidden overflow-y-auto text-[20px]'>
                         {groupMembers.map((user)=>{
-                            if(!addedUsers.includes(user)){
-                                console.log(user);
+                            if(!addedUsers.includes(user)&&user.id!==uid1){
                                 if(user.name){
                                     
                                 return(
@@ -199,7 +200,7 @@ const CreateGroup = () => {
                     </label>
                     <div className='flex flex-col w-[600px] h-[200px] border-r-2 border-black b-2 overflow-x-hidden overflow-y-auto text-[20px]'>
                         {addedUsers.map((user)=>{
-                                console.log(user);
+                
                                 if(user.name){
                                     
                                 return(
