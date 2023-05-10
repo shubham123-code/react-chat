@@ -24,15 +24,36 @@ const CreateProfile = ({setProfileCreated, setCreateProfileMode}) => {
       console.log(user);
       const imageRef = ref(storage, 'user-images/user-'+temp+'.jpg');
       const metadata = {
-          contentType: 'image/jpeg',
-        };
+        contentType: 'image/jpeg',
+      };
+      const toastOptions = {
+        position:'bottom-right',
+        autoClass:8000,
+        pauseOnHover:true,
+        draggable: true,
+        theme:"dark", 
+      };
+      if(displayName === '') {
+        toast.error('Name is required', toastOptions); return;
+      } else if(email === '') {
+        toast.error('Email is Required', toastOptions); return;
+      } else if(password === '') {
+        toast.error('Password can not be blank', toastOptions); return;
+      } else if(displayName.length < 3) {
+        toast.error('Name must be at least 3 characters long', toastOptions); return;
+      } else if(password.length < 8) {
+        toast.error('Password must be at least 8 characters long', toastOptions); return; 
+      } else if(email.length < 4) {
+        toast.error("Enter a valid email", toastOptions); return;
+      }
       await uploadBytes(imageRef, photo, metadata).then(async()=>{
-      await getDownloadURL(imageRef).then((url)=>{
+        await getDownloadURL(imageRef).then((url)=>{
           setStorageUrl(url);
-      })}).then(async()=>{
-        if(storageUrl===""){
-          return;
-        }
+        })})
+        .then(async()=>{
+          if(storageUrl===""){
+            return;
+          }
         await createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           // Signed in 
@@ -115,7 +136,7 @@ const CreateProfile = ({setProfileCreated, setCreateProfileMode}) => {
                 Enter Your Email
                 </label>
                 <input
-                type="text"
+                type="email"
                 name="email"
                 onChange={(e)=>(setEmail(e.target.value))}
                 id="email"
@@ -159,6 +180,7 @@ const CreateProfile = ({setProfileCreated, setCreateProfileMode}) => {
     </div>
     </div>
     </div>
+    <ToastContainer/>
   </div>
   )
 }
